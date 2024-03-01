@@ -1,0 +1,30 @@
+version: '3'
+services:
+  postgres: 
+    image: "postgres" #escolhendo a imagem e definindo as variaveis
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=root
+    ports:
+      - "5432:5432"
+    volumes: # aqui ele ta pegando o arquivo e colocando la no docker
+      - ./migration/docker-database-initial.sql:/docker-entrypoint-initdb.d/docker-database-initial.sql
+
+  pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "patrike@alura.com"
+      PGADMIN_DEFAULT_PASSWORD: "123456"
+    ports:
+      - "54321:80"
+    depends_on:
+      - postgres
+
+# esse arquivo é um YML para o docker no caso estamos criando uma imagem de uma maneira mais rápida
+# ao inves de utilizar o padrão docker image e criar e rodar a imagem simplesmentes estamos definindo os parametros
+# colocando as dependencias e precisamos rodar o comando "docker-compose up" assim geramos um banco postgress e o pgadmin web
+# o mesmo que temos no pc mas versão docker
+
+#quando acessar o pgadmin não conseguimos conectar por localhost a base do postgress é necessário buscar o ip da imagem
+#para isso podemos usar o comando "docker-compose exec postgress sh" onde abre o terminal da imagem assim conseguimos pegar o ip
